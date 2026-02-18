@@ -16,8 +16,36 @@ export interface QuizQuestion {
     line2after?: string
   }
   warningText?: string
-  options: [QuizOption, QuizOption]
-  correctAnswer: 0 | 1
+  layout?: "2-col" | "2x2"
+  options: QuizOption[]
+  correctAnswer: number
+}
+
+// Step 2 variants based on step 1 choice
+export const step2Man: QuizQuestion = {
+  id: 2,
+  question: "Que idade voce tem?",
+  layout: "2x2",
+  options: [
+    { label: "18 - 24", imageSrc: "/images/man-18-24.jpg" },
+    { label: "25 - 34", imageSrc: "/images/man-25-34.jpg" },
+    { label: "35 - 44", imageSrc: "/images/man-35-44.jpg" },
+    { label: "45+", imageSrc: "/images/man-45.jpg" },
+  ],
+  correctAnswer: 0,
+}
+
+export const step2Woman: QuizQuestion = {
+  id: 2,
+  question: "Que idade voce tem?",
+  layout: "2x2",
+  options: [
+    { label: "18 - 24", imageSrc: "/images/woman-18-24.jpg" },
+    { label: "25 - 34", imageSrc: "/images/woman-25-34.jpg" },
+    { label: "35 - 44", imageSrc: "/images/woman-35-44.jpg" },
+    { label: "45+", imageSrc: "/images/woman-45.jpg" },
+  ],
+  correctAnswer: 0,
 }
 
 export const quizQuestions: QuizQuestion[] = [
@@ -34,18 +62,24 @@ export const quizQuestions: QuizQuestion[] = [
     },
     subtitle: "As palavras precisam saber: voce e...",
     warningText: "ATENCAO: Apenas 2.8% sao aprovados neste teste.",
+    layout: "2-col",
     options: [
       { label: "Homem", imageSrc: "/images/img01.png" },
       { label: "Mulher", imageSrc: "/images/img02.png" },
     ],
     correctAnswer: 0,
   },
+  // Step 2 is injected dynamically based on step 1 choice (see quiz.tsx)
+  // Placeholder so IDs stay consistent - this will be replaced at runtime
   {
     id: 2,
-    question: "Pergunta 2 - Insira sua pergunta aqui",
+    question: "Que idade voce tem?",
+    layout: "2x2",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "18 - 24", imageSrc: "" },
+      { label: "25 - 34", imageSrc: "" },
+      { label: "35 - 44", imageSrc: "" },
+      { label: "45+", imageSrc: "" },
     ],
     correctAnswer: 0,
   },

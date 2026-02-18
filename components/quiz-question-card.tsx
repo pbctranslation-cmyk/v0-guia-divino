@@ -6,7 +6,7 @@ import { ChevronRight, ImageIcon, TriangleAlert } from "lucide-react"
 
 interface QuizQuestionCardProps {
   question: QuizQuestion
-  onSelectOption: (index: 0 | 1) => void
+  onSelectOption: (index: number) => void
 }
 
 export function QuizQuestionCard({
@@ -14,6 +14,7 @@ export function QuizQuestionCard({
   onSelectOption,
 }: QuizQuestionCardProps) {
   const isSpecialStep = !!question.headline
+  const is2x2 = question.layout === "2x2"
 
   return (
     <div className="flex flex-col gap-6">
@@ -42,34 +43,37 @@ export function QuizQuestionCard({
         </div>
       ) : (
         <div className="flex flex-col gap-2 text-center">
-          <span className="text-xs tracking-[0.2em] uppercase text-primary font-medium">
-            {"Pergunta " + question.id + " de 25"}
-          </span>
-          <h2 className="font-serif text-xl md:text-2xl font-semibold text-foreground leading-relaxed text-balance">
-            {question.question}
-          </h2>
+          {question.question && (
+            <h2 className="font-serif text-lg md:text-xl font-bold text-foreground leading-relaxed text-balance">
+              {question.question}
+            </h2>
+          )}
         </div>
       )}
 
-      {/* Image options */}
+      {/* Image options grid */}
       <div
-        className="grid grid-cols-2 gap-3 md:gap-4"
+        className="grid grid-cols-2 gap-3 md:gap-4 mx-auto w-full max-w-md"
         role="group"
         aria-label="Opcoes de resposta"
       >
         {question.options.map((option, index) => (
           <button
             key={index}
-            onClick={() => onSelectOption(index as 0 | 1)}
+            onClick={() => onSelectOption(index)}
             className={cn(
               "group relative flex flex-col overflow-hidden rounded-lg",
-              "bg-card transition-all duration-200 cursor-pointer",
+              "transition-all duration-200 cursor-pointer",
               "hover:shadow-[0_0_20px_-4px] hover:shadow-primary/30",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              is2x2 ? "border-2 border-primary" : "bg-card"
             )}
           >
             {/* Image area */}
-            <div className="relative aspect-[3/4] w-full overflow-hidden">
+            <div className={cn(
+              "relative w-full overflow-hidden",
+              is2x2 ? "aspect-square" : "aspect-[3/4]"
+            )}>
               {option.imageSrc ? (
                 <img
                   src={option.imageSrc}
@@ -84,12 +88,23 @@ export function QuizQuestionCard({
               )}
             </div>
 
-            {/* Label with chevron */}
-            <div className="flex items-center justify-between px-3 py-2.5 md:px-4 md:py-3 bg-card">
-              <span className="text-sm md:text-base font-medium text-foreground">
+            {/* Label bar */}
+            <div className={cn(
+              "flex items-center justify-between px-3 py-2 md:px-4 md:py-2.5",
+              is2x2 ? "bg-primary" : "bg-card"
+            )}>
+              <span className={cn(
+                "text-sm md:text-base font-semibold",
+                is2x2 ? "text-primary-foreground" : "text-foreground"
+              )}>
                 {option.label}
               </span>
-              <ChevronRight className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground transition-colors group-hover:text-foreground" />
+              <ChevronRight className={cn(
+                "h-4 w-4 md:h-5 md:w-5",
+                is2x2
+                  ? "text-primary-foreground/70 group-hover:text-primary-foreground"
+                  : "text-muted-foreground group-hover:text-foreground"
+              )} />
             </div>
           </button>
         ))}
@@ -97,7 +112,7 @@ export function QuizQuestionCard({
 
       {/* Warning banner */}
       {question.warningText && (
-        <div className="flex items-start gap-2 rounded-lg bg-secondary px-4 py-3 text-center">
+        <div className="flex items-start gap-2 rounded-lg bg-secondary px-4 py-3 text-center mx-auto max-w-md w-full">
           <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
           <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
             <span className="font-bold text-primary">ATENCAO:</span>{" "}

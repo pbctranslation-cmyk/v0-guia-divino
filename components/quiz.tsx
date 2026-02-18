@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useCallback } from "react"
-import { quizQuestions } from "@/lib/quiz-data"
+import { useState, useCallback, useMemo } from "react"
+import { quizQuestions, step2Man, step2Woman } from "@/lib/quiz-data"
 import { QuizProgress } from "@/components/quiz-progress"
 import { QuizQuestionCard } from "@/components/quiz-question-card"
 import { QuizResults } from "@/components/quiz-results"
@@ -10,37 +10,55 @@ export function Quiz() {
   const [currentStep, setCurrentStep] = useState(0)
   const [score, setScore] = useState(0)
   const [finished, setFinished] = useState(false)
+  const [genderChoice, setGenderChoice] = useState<"man" | "woman" | null>(null)
 
-  const currentQuestion = quizQuestions[currentStep]
+  // Build the effective questions list, injecting the correct step 2 variant
+  const effectiveQuestions = useMemo(() => {
+    const questions = [...quizQuestions]
+    if (genderChoice === "man") {
+      questions[1] = step2Man
+    } else if (genderChoice === "woman") {
+      questions[1] = step2Woman
+    }
+    return questions
+  }, [genderChoice])
+
+  const currentQuestion = effectiveQuestions[currentStep]
 
   const handleSelectOption = useCallback(
-    (index: 0 | 1) => {
+    (index: number) => {
+      // Capture gender choice on step 1
+      if (currentStep === 0) {
+        setGenderChoice(index === 0 ? "man" : "woman")
+      }
+
       const isCorrect = index === currentQuestion.correctAnswer
       const nextScore = isCorrect ? score + 1 : score
 
       setScore(nextScore)
 
-      if (currentStep < quizQuestions.length - 1) {
+      if (currentStep < effectiveQuestions.length - 1) {
         setCurrentStep((prev) => prev + 1)
       } else {
         setScore(nextScore)
         setFinished(true)
       }
     },
-    [currentStep, currentQuestion, score]
+    [currentStep, currentQuestion, score, effectiveQuestions.length]
   )
 
   const handleRestart = useCallback(() => {
     setCurrentStep(0)
     setScore(0)
     setFinished(false)
+    setGenderChoice(null)
   }, [])
 
   if (finished) {
     return (
       <QuizResults
         score={score}
-        totalQuestions={quizQuestions.length}
+        totalQuestions={effectiveQuestions.length}
         onRestart={handleRestart}
       />
     )
@@ -48,10 +66,10 @@ export function Quiz() {
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-6 md:py-10">
-      <QuizProgress currentStep={currentStep} totalSteps={quizQuestions.length} />
+      <QuizProgress currentStep={currentStep} totalSteps={effectiveQuestions.length} />
 
       <QuizQuestionCard
-        key={currentStep}
+        key={`${currentStep}-${genderChoice}`}
         question={currentQuestion}
         onSelectOption={handleSelectOption}
       />
