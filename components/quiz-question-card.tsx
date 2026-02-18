@@ -2,22 +2,16 @@
 
 import { cn } from "@/lib/utils"
 import type { QuizQuestion } from "@/lib/quiz-data"
-import { Check, X } from "lucide-react"
+import { ImageIcon } from "lucide-react"
 
 interface QuizQuestionCardProps {
   question: QuizQuestion
-  selectedAnswer: number | null
-  hasConfirmed: boolean
-  onSelectAnswer: (index: number) => void
+  onSelectOption: (index: 0 | 1) => void
 }
-
-const optionLabels = ["A", "B", "C", "D"]
 
 export function QuizQuestionCard({
   question,
-  selectedAnswer,
-  hasConfirmed,
-  onSelectAnswer,
+  onSelectOption,
 }: QuizQuestionCardProps) {
   return (
     <div className="flex flex-col gap-8">
@@ -30,62 +24,46 @@ export function QuizQuestionCard({
         </h2>
       </div>
 
-      <div className="flex flex-col gap-3" role="radiogroup" aria-label="Opcoes de resposta">
-        {question.options.map((option, index) => {
-          const isSelected = selectedAnswer === index
-          const isCorrect = hasConfirmed && index === question.correctAnswer
-          const isWrong = hasConfirmed && isSelected && index !== question.correctAnswer
-
-          return (
-            <button
-              key={index}
-              onClick={() => !hasConfirmed && onSelectAnswer(index)}
-              disabled={hasConfirmed}
-              role="radio"
-              aria-checked={isSelected}
-              className={cn(
-                "group relative flex items-center gap-4 rounded-lg border px-5 py-4 text-left transition-all duration-200",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                !hasConfirmed && !isSelected && "border-border bg-card hover:border-primary/40 hover:bg-secondary cursor-pointer",
-                !hasConfirmed && isSelected && "border-primary bg-primary/10 cursor-pointer",
-                isCorrect && "border-success bg-success/10",
-                isWrong && "border-destructive bg-destructive/10",
-                hasConfirmed && !isCorrect && !isWrong && "border-border/50 bg-card opacity-50"
+      <div
+        className="grid grid-cols-2 gap-4 md:gap-6"
+        role="group"
+        aria-label="Opcoes de resposta"
+      >
+        {question.options.map((option, index) => (
+          <button
+            key={index}
+            onClick={() => onSelectOption(index as 0 | 1)}
+            className={cn(
+              "group relative flex flex-col overflow-hidden rounded-xl border border-border",
+              "bg-card transition-all duration-200 cursor-pointer",
+              "hover:border-primary/60 hover:shadow-[0_0_24px_-4px] hover:shadow-primary/20",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            )}
+          >
+            {/* Image area */}
+            <div className="relative aspect-[4/3] w-full bg-secondary/60 overflow-hidden">
+              {option.imageSrc ? (
+                <img
+                  src={option.imageSrc}
+                  alt={option.label}
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              ) : (
+                <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-muted-foreground transition-colors duration-200 group-hover:text-primary/60">
+                  <ImageIcon className="h-10 w-10 md:h-12 md:w-12" strokeWidth={1} />
+                  <span className="text-xs tracking-wider uppercase">Imagem</span>
+                </div>
               )}
-            >
-              <span
-                className={cn(
-                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-sm font-semibold transition-colors duration-200",
-                  !hasConfirmed && !isSelected && "bg-secondary text-muted-foreground group-hover:bg-primary/20 group-hover:text-primary",
-                  !hasConfirmed && isSelected && "bg-primary text-primary-foreground",
-                  isCorrect && "bg-success text-success-foreground",
-                  isWrong && "bg-destructive text-foreground",
-                  hasConfirmed && !isCorrect && !isWrong && "bg-secondary text-muted-foreground"
-                )}
-              >
-                {isCorrect ? (
-                  <Check className="h-4 w-4" />
-                ) : isWrong ? (
-                  <X className="h-4 w-4" />
-                ) : (
-                  optionLabels[index]
-                )}
+            </div>
+
+            {/* Label */}
+            <div className="flex items-center justify-center px-3 py-3 md:py-4">
+              <span className="text-sm md:text-base font-medium text-foreground/80 transition-colors duration-200 group-hover:text-foreground text-balance text-center leading-snug">
+                {option.label}
               </span>
-              <span
-                className={cn(
-                  "text-base leading-relaxed transition-colors duration-200",
-                  !hasConfirmed && !isSelected && "text-foreground/80 group-hover:text-foreground",
-                  !hasConfirmed && isSelected && "text-foreground",
-                  isCorrect && "text-success font-medium",
-                  isWrong && "text-destructive",
-                  hasConfirmed && !isCorrect && !isWrong && "text-muted-foreground"
-                )}
-              >
-                {option}
-              </span>
-            </button>
-          )
-        })}
+            </div>
+          </button>
+        ))}
       </div>
     </div>
   )

@@ -20,7 +20,7 @@ export function QuizStart({ onStart }: QuizStartProps) {
             Quiz de Religiao
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed max-w-md mx-auto">
-            Teste seus conhecimentos com 25 perguntas sobre o tema. Selecione a resposta correta e confirme para avancar.
+            Teste seus conhecimentos com 25 perguntas sobre o tema. Clique em uma das duas imagens para escolher sua resposta.
           </p>
         </div>
 
@@ -32,7 +32,7 @@ export function QuizStart({ onStart }: QuizStartProps) {
             </span>
             <span className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-              4 opcoes cada
+              2 opcoes cada
             </span>
           </div>
         </div>
