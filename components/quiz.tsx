@@ -5,22 +5,13 @@ import { quizQuestions } from "@/lib/quiz-data"
 import { QuizProgress } from "@/components/quiz-progress"
 import { QuizQuestionCard } from "@/components/quiz-question-card"
 import { QuizResults } from "@/components/quiz-results"
-import { QuizStart } from "@/components/quiz-start"
-
-type QuizPhase = "start" | "playing" | "results"
 
 export function Quiz() {
-  const [phase, setPhase] = useState<QuizPhase>("start")
   const [currentStep, setCurrentStep] = useState(0)
   const [score, setScore] = useState(0)
+  const [finished, setFinished] = useState(false)
 
   const currentQuestion = quizQuestions[currentStep]
-
-  const handleStart = useCallback(() => {
-    setPhase("playing")
-    setCurrentStep(0)
-    setScore(0)
-  }, [])
 
   const handleSelectOption = useCallback(
     (index: 0 | 1) => {
@@ -32,25 +23,20 @@ export function Quiz() {
       if (currentStep < quizQuestions.length - 1) {
         setCurrentStep((prev) => prev + 1)
       } else {
-        // Use the calculated nextScore since setState is async
         setScore(nextScore)
-        setPhase("results")
+        setFinished(true)
       }
     },
     [currentStep, currentQuestion, score]
   )
 
   const handleRestart = useCallback(() => {
-    setPhase("start")
     setCurrentStep(0)
     setScore(0)
+    setFinished(false)
   }, [])
 
-  if (phase === "start") {
-    return <QuizStart onStart={handleStart} />
-  }
-
-  if (phase === "results") {
+  if (finished) {
     return (
       <QuizResults
         score={score}
@@ -61,7 +47,7 @@ export function Quiz() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-8 md:py-12">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-6 md:py-10">
       <QuizProgress currentStep={currentStep} totalSteps={quizQuestions.length} />
 
       <QuizQuestionCard

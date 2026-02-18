@@ -6,6 +6,16 @@ export interface QuizOption {
 export interface QuizQuestion {
   id: number
   question: string
+  subtitle?: string
+  headline?: {
+    before: string
+    highlight: string
+    after: string
+    line2before?: string
+    line2highlight?: string
+    line2after?: string
+  }
+  warningText?: string
   options: [QuizOption, QuizOption]
   correctAnswer: 0 | 1
 }
@@ -13,10 +23,20 @@ export interface QuizQuestion {
 export const quizQuestions: QuizQuestion[] = [
   {
     id: 1,
-    question: "Pergunta 1 - Insira sua pergunta aqui",
+    question: "",
+    headline: {
+      before: "SEU DESTINO FINANCEIRO",
+      highlight: "PODE MUDAR HOJE.",
+      after: "",
+      line2before: "FACA O TESTE",
+      line2highlight: "DE 30 SEGUNDOS",
+      line2after: "E DESCUBRA SE A ORACAO DAS 12 PALAVRAS FOI DESTINADA PARA VOCE.",
+    },
+    subtitle: "As palavras precisam saber: voce e...",
+    warningText: "ATENCAO: Apenas 2.8% sao aprovados neste teste.",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "Homem", imageSrc: "/images/img01.png" },
+      { label: "Mulher", imageSrc: "/images/img02.png" },
     ],
     correctAnswer: 0,
   },
