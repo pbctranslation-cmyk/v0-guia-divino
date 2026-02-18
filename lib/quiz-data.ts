@@ -17,6 +17,7 @@ export interface QuizQuestion {
   }
   warningText?: string
   layout?: "2-col" | "2x2"
+  type?: "default" | "checkout"
   options: QuizOption[]
   correctAnswer: number
 }
@@ -265,11 +266,9 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     id: 23,
-    question: "Pergunta 23 - Insira sua pergunta aqui",
-    options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
-    ],
+    question: "Complete sua compra para continuar",
+    type: "checkout",
+    options: [],
     correctAnswer: 0,
   },
   {
