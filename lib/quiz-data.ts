@@ -17,7 +17,7 @@ export interface QuizQuestion {
   }
   warningText?: string
   layout?: "2-col" | "2x2"
-  type?: "default" | "checkout"
+  type?: "default" | "checkout" | "upsell1" | "upsell2"
   options: QuizOption[]
   correctAnswer: number
 }
@@ -257,36 +257,9 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     id: 22,
-    question: "Pergunta 22 - Insira sua pergunta aqui",
-    options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
-    ],
-    correctAnswer: 0,
-  },
-  {
-    id: 23,
-    question: "Complete sua compra para continuar",
+    question: "Tudo pronto! Seu resultado está bloqueado. Clique abaixo para acessá-lo.",
     type: "checkout",
     options: [],
     correctAnswer: 0,
-  },
-  {
-    id: 24,
-    question: "Pergunta 24 - Insira sua pergunta aqui",
-    options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
-    ],
-    correctAnswer: 0,
-  },
-  {
-    id: 25,
-    question: "Pergunta 25 - Insira sua pergunta aqui",
-    options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
-    ],
-    correctAnswer: 0,
-  },
+  }
 ]
