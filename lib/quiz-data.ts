@@ -257,9 +257,11 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     id: 22,
-    question: "Tudo pronto! Seu resultado está bloqueado. Clique abaixo para acessá-lo.",
-    type: "checkout",
-    options: [],
+    question: "Pergunta 22 - Insira sua pergunta aqui",
+    options: [
+      { label: "Opcao A", imageSrc: "" },
+      { label: "Opcao B", imageSrc: "" },
+    ],
     correctAnswer: 0,
   }
 ]
