@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useMemo } from "react"
+import { useState, useCallback, useMemo, useEffect } from "react"
 import { quizQuestions, step2Man, step2Woman } from "@/lib/quiz-data"
 import { QuizProgress } from "@/components/quiz-progress"
 import { QuizQuestionCard } from "@/components/quiz-question-card"
@@ -12,6 +12,22 @@ export function Quiz() {
   const [score, setScore] = useState(0)
   const [finished, setFinished] = useState(false)
   const [genderChoice, setGenderChoice] = useState<"man" | "woman" | null>(null)
+  const [isClient, setIsClient] = useState(false)
+
+  // Initialization: read ?step= from URL
+  useEffect(() => {
+    setIsClient(true)
+    const searchParams = new URLSearchParams(window.location.search)
+    const stepParam = searchParams.get("step")
+
+    if (stepParam) {
+      const stepId = parseInt(stepParam, 10)
+      const targetIndex = quizQuestions.findIndex((q) => q.id === stepId)
+      if (targetIndex !== -1) {
+        setCurrentStep(targetIndex)
+      }
+    }
+  }, [])
 
   // Build the effective questions list, injecting the correct step 2 variant
   const effectiveQuestions = useMemo(() => {
@@ -48,14 +64,7 @@ export function Quiz() {
     [currentStep, currentQuestion, score, effectiveQuestions.length]
   )
 
-  const handlePurchaseComplete = useCallback(() => {
-    // Advance from checkout step (23) to next step (24)
-    if (currentStep < effectiveQuestions.length - 1) {
-      setCurrentStep((prev) => prev + 1)
-    } else {
-      setFinished(true)
-    }
-  }, [currentStep, effectiveQuestions.length])
+
 
   const handleRestart = useCallback(() => {
     setCurrentStep(0)
@@ -76,12 +85,14 @@ export function Quiz() {
 
   const isCheckoutStep = currentQuestion.type === "checkout"
 
+  if (!isClient) return null // Evita piscar o primeiro passo no carregamento se houver redirecionamento
+
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-6 md:py-10">
       <QuizProgress currentStep={currentStep} totalSteps={effectiveQuestions.length} />
 
       {isCheckoutStep ? (
-        <HotmartCheckout onPurchaseComplete={handlePurchaseComplete} />
+        <HotmartCheckout />
       ) : (
         <QuizQuestionCard
           key={`${currentStep}-${genderChoice}`}
