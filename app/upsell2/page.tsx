@@ -7,11 +7,20 @@ export default function Upsell2Page() {
     const videoRef = useRef<HTMLVideoElement>(null)
     const [showWidget, setShowWidget] = useState(false)
 
+    const lastTimeRef = useRef(0)
+
     useEffect(() => {
         const video = videoRef.current
         if (!video) return
 
         const handleTimeUpdate = () => {
+            // Prevent seeking forward
+            if (video.currentTime > lastTimeRef.current + 1.5) {
+                video.currentTime = lastTimeRef.current
+            } else {
+                lastTimeRef.current = video.currentTime
+            }
+
             if (!showWidget && video.duration > 0) {
                 const progress = video.currentTime / video.duration
                 if (progress >= 0.8) {
@@ -20,8 +29,18 @@ export default function Upsell2Page() {
             }
         }
 
+        const handleSeeking = () => {
+            if (video.currentTime > lastTimeRef.current) {
+                video.currentTime = lastTimeRef.current
+            }
+        }
+
         video.addEventListener("timeupdate", handleTimeUpdate)
-        return () => video.removeEventListener("timeupdate", handleTimeUpdate)
+        video.addEventListener("seeking", handleSeeking)
+        return () => {
+            video.removeEventListener("timeupdate", handleTimeUpdate)
+            video.removeEventListener("seeking", handleSeeking)
+        }
     }, [showWidget])
 
     return (
@@ -74,18 +93,6 @@ export default function Upsell2Page() {
                         />
                     )}
                 </div>
-
-                {/* Footer */}
-                <footer className="mt-auto py-10 w-full text-center flex flex-col items-center gap-1 text-xs text-gray-800 font-medium">
-                    <p>Copyright 2026 - Guión Divino ®</p>
-                    <p>All rights reserved</p>
-                    <div className="flex gap-2">
-                        <span className="cursor-pointer hover:underline">Terms of use</span>
-                        <span>-</span>
-                        <span className="cursor-pointer hover:underline">Privacy</span>
-                    </div>
-                    <p className="mt-2 text-gray-400 font-normal italic">Insira um disclaimer aqui...</p>
-                </footer>
             </div>
         </>
     )
