@@ -23,10 +23,10 @@ export default function Downsell2Page() {
                         <p className="text-lg md:text-xl font-medium leading-relaxed uppercase tracking-wide">
                             Última Oportunidad
                         </p>
-                        <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-xl mx-auto">
+                        <p className="text-sm md:text-lg text-gray-600 leading-relaxed max-w-xl mx-auto">
                             Si llegaste hasta aquí, es porque algo dentro de ti ya reconoció que este paso es importante. Considerando la situación, he preparado una oferta que te resultará muy interesante.
                         </p>
-                        <p className="text-base md:text-lg font-semibold text-black leading-relaxed">
+                        <p className="text-sm md:text-lg font-semibold text-black leading-relaxed">
                             Así, no obstaculizará tu progreso ni tu aprendizaje, y podrás alcanzar la prosperidad que necesitas por completo.
                         </p>
                     </div>
