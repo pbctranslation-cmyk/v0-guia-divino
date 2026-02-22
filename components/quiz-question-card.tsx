@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useRef, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import type { QuizQuestion } from "@/lib/quiz-data"
 import { ChevronRight, ImageIcon, TriangleAlert } from "lucide-react"
@@ -15,10 +16,197 @@ export function QuizQuestionCard({
 }: QuizQuestionCardProps) {
   const isSpecialStep = !!question.headline
   const is2x2 = question.layout === "2x2"
+  const isList = question.layout === "list"
+  const isImageCta = question.layout === "image-cta"
+  const isMultiSelect = question.layout === "multi-select"
 
+  // Local state for multi-select
+  const [selected, setSelected] = useState<Set<number>>(new Set())
+  const [showVideoBtn, setShowVideoBtn] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    // Reset state when question changes
+    setShowVideoBtn(false)
+    setSelected(new Set())
+  }, [question.id])
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video || !question.videoSrc) return
+
+    const handleTimeUpdate = () => {
+      if (video.duration) {
+        const progress = video.currentTime / video.duration
+        if (progress >= 0.8) {
+          setShowVideoBtn(true)
+        }
+      }
+    }
+
+    video.addEventListener("timeupdate", handleTimeUpdate)
+    return () => video.removeEventListener("timeupdate", handleTimeUpdate)
+  }, [question.videoSrc])
+
+  const toggleSelect = (index: number) => {
+    setSelected(prev => {
+      const next = new Set(prev)
+      if (next.has(index)) {
+        next.delete(index)
+      } else {
+        next.add(index)
+      }
+      return next
+    })
+  }
+
+  // multi-select: checkboxes in a 2-col grid + Continue button
+  if (isMultiSelect) {
+    return (
+      <div className="flex flex-col gap-5 w-full max-w-md mx-auto">
+        <div className="text-center flex flex-col gap-1">
+          <h2 className="font-serif text-lg md:text-xl font-bold text-foreground leading-relaxed">
+            {question.question}
+          </h2>
+          {question.subtitle && (
+            <p className="text-sm text-muted-foreground italic">{question.subtitle}</p>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          {question.options.map((option, index) => {
+            const isChecked = selected.has(index)
+            return (
+              <button
+                key={index}
+                onClick={() => toggleSelect(index)}
+                className={cn(
+                  "flex items-center gap-2 rounded-xl px-3 py-3 text-left text-sm font-medium transition-all duration-150 border",
+                  isChecked
+                    ? "bg-primary/15 border-primary text-foreground"
+                    : "bg-[#1a1a1a] border-white/10 text-foreground hover:border-white/30"
+                )}
+              >
+                <span className={cn(
+                  "w-4 h-4 shrink-0 rounded border-2 flex items-center justify-center transition-colors",
+                  isChecked ? "border-primary bg-primary" : "border-white/30"
+                )}>
+                  {isChecked && (
+                    <svg className="w-2.5 h-2.5 text-black" viewBox="0 0 10 10" fill="none">
+                      <path d="M1.5 5L4 7.5L8.5 2.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </span>
+                {option.label}
+              </button>
+            )
+          })}
+        </div>
+
+        <button
+          onClick={() => onSelectOption(0)}
+          className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-bold text-base tracking-wide transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
+        >
+          {question.ctaButtonLabel ?? "Continuar"}
+        </button>
+      </div>
+    )
+  }
+
+  // image-cta: hero media + text + Continue button
+  if (isImageCta) {
+    const showButton = question.videoSrc ? showVideoBtn : true
+
+    return (
+      <div className="flex flex-col gap-5 items-center w-full max-w-md mx-auto">
+        {question.redBanner && (
+          <div className="w-full bg-[#cc0000] text-white py-2 px-4 rounded-xl text-center font-bold text-sm md:text-base mb-2">
+            {question.redBanner}
+          </div>
+        )}
+
+        {question.subtitle && (
+          <p className={cn(
+            "text-sm md:text-base leading-relaxed italic",
+            question.subtitleIsPrimary ? "text-primary font-semibold" : "text-muted-foreground"
+          )}>
+            {question.subtitle}
+          </p>
+        )}
+
+        {question.headline && (
+          <h2 className="font-serif text-xl md:text-2xl font-bold uppercase leading-snug tracking-wide text-foreground text-center">
+            {question.headline.before}{" "}
+            <span className="text-primary">{question.headline.highlight}</span>
+            {question.headline.after ? ` ${question.headline.after}` : ""}
+            {question.headline.line2before && (
+              <>
+                <br />
+                {question.headline.line2before}{" "}
+                <span className="text-primary">{question.headline.line2highlight}</span>
+                {question.headline.line2after ? ` ${question.headline.line2after}` : ""}
+              </>
+            )}
+          </h2>
+        )}
+
+        <div className="w-full rounded-2xl overflow-hidden shadow-2xl">
+          {question.videoSrc ? (
+            <video
+              ref={videoRef}
+              src={question.videoSrc}
+              controls
+              autoPlay
+              muted
+              playsInline
+              className="w-full h-auto aspect-video object-cover"
+            />
+          ) : (
+            <img
+              src={question.stepImage}
+              alt=""
+              className="w-full h-auto object-cover"
+            />
+          )}
+        </div>
+
+        {question.ctaText && (
+          <p className="text-sm md:text-base text-foreground text-center leading-relaxed px-2">
+            {question.ctaText}
+          </p>
+        )}
+
+        {showButton && (
+          <button
+            onClick={() => onSelectOption(0)}
+            className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-bold text-base md:text-lg tracking-wide transition-all duration-200 hover:brightness-110 active:scale-[0.98] animate-in fade-in slide-in-from-bottom-2"
+          >
+            {question.ctaButtonLabel ?? "Continuar"}
+          </button>
+        )}
+      </div>
+    )
+  }
+
+  // Standard layouts (list, grid, special)
   return (
     <div className="flex flex-col gap-6">
-      {/* Headline / Question */}
+      {/* Red Banner at top */}
+      {question.redBanner && (
+        <div className="w-full bg-[#cc0000] text-white py-2 px-4 rounded-xl text-center font-bold text-sm md:text-base">
+          {question.redBanner}
+        </div>
+      )}
+
+      {/* Warning layout (Aviso:) */}
+      {question.warningBanner && (
+        <p className="text-sm md:text-base text-center leading-relaxed font-medium">
+          <span className="text-primary font-bold">Aviso: </span>
+          {question.warningBanner}
+        </p>
+      )}
+
+      {/* Headline / Question Header */}
       {isSpecialStep && question.headline ? (
         <div className="flex flex-col gap-4 text-center">
           <h2 className="font-serif text-xl md:text-2xl font-bold uppercase leading-snug tracking-wide text-foreground">
@@ -36,81 +224,99 @@ export function QuizQuestionCard({
           </h2>
 
           {question.subtitle && (
-            <p className="text-sm md:text-base text-muted-foreground">
+            <p className={cn(
+              "text-sm md:text-base leading-relaxed italic",
+              question.subtitleIsPrimary ? "text-primary font-semibold" : "text-muted-foreground"
+            )}>
               {question.subtitle}
             </p>
           )}
         </div>
       ) : (
         <div className="flex flex-col gap-2 text-center">
+          {question.subtitle && question.subtitleIsPrimary && (
+            <p className="text-sm md:text-base leading-relaxed font-semibold text-primary">
+              {question.subtitle}
+            </p>
+          )}
           {question.question && (
             <h2 className="font-serif text-lg md:text-xl font-bold text-foreground leading-relaxed text-balance">
-              {question.question}
+              {question.questionHighlight ? (
+                <>
+                  {question.question}
+                  <span className="text-primary">{question.questionHighlight}</span>
+                  {question.questionAfterHighlight ?? ""}
+                </>
+              ) : (
+                question.question
+              )}
             </h2>
+          )}
+          {question.subtitle && !question.subtitleIsPrimary && (
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed italic">
+              {question.subtitle}
+            </p>
           )}
         </div>
       )}
 
-      {/* Image options grid */}
-      <div
-        className="grid grid-cols-2 gap-3 md:gap-4 mx-auto w-full max-w-md"
-        role="group"
-        aria-label="Opcoes de resposta"
-      >
-        {question.options.map((option, index) => (
-          <button
-            key={index}
-            onClick={() => onSelectOption(index)}
-            className={cn(
-              "group relative flex flex-col overflow-hidden rounded-lg",
-              "transition-all duration-200 cursor-pointer",
-              "hover:shadow-[0_0_20px_-4px] hover:shadow-primary/30",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-              is2x2 ? "border-2 border-primary" : "bg-card"
-            )}
-          >
-            {/* Image area */}
-            <div className={cn(
-              "relative w-full overflow-hidden",
-              is2x2 ? "aspect-square" : "aspect-[3/4]"
-            )}>
-              {option.imageSrc ? (
-                <img
-                  src={option.imageSrc}
-                  alt={option.label}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              ) : (
-                <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-secondary/60 text-muted-foreground transition-colors duration-200 group-hover:text-primary/60">
-                  <ImageIcon className="h-10 w-10 md:h-12 md:w-12" strokeWidth={1} />
-                  <span className="text-xs tracking-wider uppercase">Imagem</span>
-                </div>
-              )}
-            </div>
+      {/* Inline step image (between header and options) */}
+      {question.stepImage && (
+        <div className="w-full rounded-2xl overflow-hidden">
+          <img src={question.stepImage} alt="" className="w-full h-auto object-cover" />
+        </div>
+      )}
 
-            {/* Label bar */}
-            <div className={cn(
-              "flex items-center justify-between px-3 py-2 md:px-4 md:py-2.5",
-              is2x2 ? "bg-primary" : "bg-card"
-            )}>
-              <span className={cn(
-                "text-sm md:text-base font-semibold",
-                is2x2 ? "text-primary-foreground" : "text-foreground"
-              )}>
+      {/* Options Rendering */}
+      {isList ? (
+        <div className="flex flex-col gap-3 w-full max-w-md mx-auto" role="group">
+          {question.options.map((option, index) => (
+            <button
+              key={index}
+              onClick={() => onSelectOption(index)}
+              className={cn(
+                "group flex items-center gap-3 w-full rounded-xl px-4 py-3.5",
+                "bg-[#1a1a1a] border border-white/10 text-left transition-all duration-200",
+                "hover:border-primary/50 hover:bg-[#222222]"
+              )}
+            >
+              {option.emoji && <span className="text-xl shrink-0 w-8 text-center">{option.emoji}</span>}
+              <span className="flex-1 text-sm md:text-base font-medium text-foreground leading-snug">
                 {option.label}
               </span>
-              <ChevronRight className={cn(
-                "h-4 w-4 md:h-5 md:w-5",
-                is2x2
-                  ? "text-primary-foreground/70 group-hover:text-primary-foreground"
-                  : "text-muted-foreground group-hover:text-foreground"
-              )} />
-            </div>
-          </button>
-        ))}
-      </div>
+              <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-3 md:gap-4 mx-auto w-full max-w-md" role="group">
+          {question.options.map((option, index) => (
+            <button
+              key={index}
+              onClick={() => onSelectOption(index)}
+              className={cn(
+                "group relative flex flex-col overflow-hidden rounded-xl transition-all duration-200 border border-white/10",
+                "hover:border-primary/50 hover:bg-[#1a1a1a]",
+                is2x2 ? "border-2 border-primary" : "bg-card"
+              )}
+            >
+              {option.imageSrc && (
+                <div className={cn("relative w-full overflow-hidden", is2x2 ? "aspect-square" : "aspect-[3/4]")}>
+                  <img src={option.imageSrc} alt={option.label} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                </div>
+              )}
+              <div className={cn("flex items-center justify-center gap-2 px-3 py-3 md:px-4 md:py-4", is2x2 ? "bg-primary" : "bg-card w-full")}>
+                {option.emoji && <span className="text-xl">{option.emoji}</span>}
+                <span className={cn("text-sm md:text-base font-semibold", is2x2 ? "text-primary-foreground" : "text-foreground")}>
+                  {option.label}
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
 
-      {/* Warning banner */}
+      {/* Warning banner at bottom */}
       {question.warningText && (
         <div className="flex items-start gap-2 rounded-lg bg-secondary px-4 py-3 text-center mx-auto max-w-md w-full">
           <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-primary" />

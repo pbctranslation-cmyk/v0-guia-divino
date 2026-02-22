@@ -17,13 +17,15 @@ export default function Upsell1Page() {
             </Script>
 
             <div className="flex flex-col items-center justify-center min-h-screen p-4 py-10 bg-background text-foreground animate-in fade-in duration-700">
-                <div className="w-full max-w-3xl">
+                <div className="w-full max-w-3xl flex flex-col items-center gap-8">
                     <HotmartUpsell
                         title="Obrigado pela sua compra base!"
                         description="Mas não feche esta página ainda. Seu pedido está incompleto sem este material complementar."
                         onComplete={handleProceed}
-                        customButton={<div id="hotmart-sales-funnel"></div>}
                     />
+
+                    {/* Sales Funnel da Hotmart - elemento independente na página */}
+                    <div id="hotmart-sales-funnel" className="w-full"></div>
                 </div>
             </div>
         </>
