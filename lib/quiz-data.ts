@@ -1,12 +1,16 @@
 export interface QuizOption {
   label: string
   imageSrc: string
+  emoji?: string
 }
 
 export interface QuizQuestion {
   id: number
   question: string
+  questionHighlight?: string   // palavra(s) em amarelo antes do restante da frase
+  questionAfterHighlight?: string // texto após o highlight
   subtitle?: string
+  subtitleIsPrimary?: boolean  // se true, renderiza o subtitle na cor primária (amarelo)
   headline?: {
     before: string
     highlight: string
@@ -16,7 +20,13 @@ export interface QuizQuestion {
     line2after?: string
   }
   warningText?: string
-  layout?: "2-col" | "2x2"
+  warningBanner?: string  // aviso no topo com prefixo "Aviso:" em amarelo
+  layout?: "2-col" | "2x2" | "list" | "image-cta" | "multi-select"
+  stepImage?: string      // imagem hero para layout image-cta
+  videoSrc?: string       // video para layout video
+  redBanner?: string      // banner vermelho no topo
+  ctaText?: string        // texto abaixo da imagem/video
+  ctaButtonLabel?: string // rótulo do botão (padrão "Continuar")
   type?: "default" | "checkout" | "upsell1" | "upsell2"
   options: QuizOption[]
   correctAnswer: number
@@ -54,19 +64,19 @@ export const quizQuestions: QuizQuestion[] = [
     id: 1,
     question: "",
     headline: {
-      before: "SEU DESTINO FINANCEIRO",
-      highlight: "PODE MUDAR HOJE.",
+      before: "TU DESTINO FINANCIERO",
+      highlight: "PUEDE CAMBIAR HOY.",
       after: "",
-      line2before: "FACA O TESTE",
+      line2before: "REALICE LA PRUEBA",
       line2highlight: "DE 30 SEGUNDOS",
-      line2after: "E DESCUBRA SE A ORACAO DAS 12 PALAVRAS FOI DESTINADA PARA VOCE.",
+      line2after: "Y DESCUBRA SI LA ORACIÓN DE 12 PALABRAS FUE HECHA PARA USTED.",
     },
-    subtitle: "As palavras precisam saber: voce e...",
-    warningText: "ATENCAO: Apenas 2.8% sao aprovados neste teste.",
+    subtitle: "Las palabras necesitan saber: tú eres...",
+    warningText: "ATENCIÓN: Sólo el 2,8% pasa esta prueba.",
     layout: "2-col",
     options: [
-      { label: "Homem", imageSrc: "/images/img01.png" },
-      { label: "Mulher", imageSrc: "/images/img02.png" },
+      { label: "Hombre", imageSrc: "/images/img01.png" },
+      { label: "Mujer", imageSrc: "/images/img02.png" },
     ],
     correctAnswer: 0,
   },
@@ -74,7 +84,7 @@ export const quizQuestions: QuizQuestion[] = [
   // Placeholder so IDs stay consistent - this will be replaced at runtime
   {
     id: 2,
-    question: "Que idade voce tem?",
+    question: "¿Cuántos años tiene?",
     layout: "2x2",
     options: [
       { label: "18 - 24", imageSrc: "" },
@@ -86,182 +96,259 @@ export const quizQuestions: QuizQuestion[] = [
   },
   {
     id: 3,
-    question: "Pergunta 3 - Insira sua pergunta aqui",
+    question: "Cuando el dinero llega a tu vida, ¿qué pasa después?",
+    layout: "list",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "Siempre aparece una urgencia o una cuenta que no esperaba", imageSrc: "", emoji: "📱" },
+      { label: "Se va sin que entienda cómo", imageSrc: "", emoji: "🕯️" },
+      { label: "Lo guardo, pero me da miedo gastarlo", imageSrc: "", emoji: "👐" },
+      { label: "Se multiplica por sí solo", imageSrc: "", emoji: "🙏" },
     ],
     correctAnswer: 0,
   },
   {
     id: 4,
-    question: "Pergunta 4 - Insira sua pergunta aqui",
+    question: "¿Sabías que las familias judías controlan el 40% de la riqueza de ",
+    questionHighlight: "Estados Unidos",
+    questionAfterHighlight: " siendo solo el 2% de la población?",
+    layout: "list",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "No tenía idea de eso", imageSrc: "", emoji: "🤩" },
+      { label: "He escuchado algo al respecto", imageSrc: "", emoji: "😐" },
+      { label: "Sí, siempre me he preguntado cómo lo logran", imageSrc: "", emoji: "❓" },
+      { label: "Es una coincidencia", imageSrc: "", emoji: "😮" },
     ],
     correctAnswer: 0,
   },
   {
     id: 5,
-    question: "Pergunta 5 - Insira sua pergunta aqui",
-    options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
-    ],
+    question: "",
+    layout: "image-cta",
+    stepImage: "/images/step5-elite-meeting.jpg",
+    ctaText: "Los Rothschild, Rockefeller, Goldman... todos conocían el secreto...",
+    ctaButtonLabel: "Continuar",
+    options: [],
     correctAnswer: 0,
   },
   {
     id: 6,
-    question: "Pergunta 6 - Insira sua pergunta aqui",
+    question: "¿Alguna vez has intentado la ",
+    questionHighlight: "Ley de Atracción",
+    questionAfterHighlight: ", el pensamiento positivo o la manifestación?",
+    layout: "list",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "Sí, varias veces y NUNCA funcionó bien", imageSrc: "", emoji: "✨" },
+      { label: "Lo intenté, pero los resultados fueron temporales", imageSrc: "", emoji: "🌀" },
+      { label: "Nunca lo intenté en serio", imageSrc: "", emoji: "😅" },
+      { label: "Funcionó perfectamente para mí", imageSrc: "", emoji: "⭐" },
     ],
     correctAnswer: 0,
   },
   {
     id: 7,
-    question: "Pergunta 7 - Insira sua pergunta aqui",
+    question: "¿Alguna vez te has preguntado:",
+    subtitle: '"¿Por qué esa persona que trabaja menos tiene más que yo?"',
+    layout: "list",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "Sí, eso me frustra profundamente", imageSrc: "" },
+      { label: "A veces pienso en eso", imageSrc: "" },
+      { label: "Rara vez", imageSrc: "" },
+      { label: "Nunca", imageSrc: "" },
     ],
     correctAnswer: 0,
   },
   {
     id: 8,
-    question: "Pergunta 8 - Insira sua pergunta aqui",
-    options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
-    ],
+    question: "",
+    layout: "image-cta",
+    stepImage: "/images/step8-biblical-scene.jpg",
+    ctaText: "Esa persona probablemente conoce frecuencias que tú aún no conoces",
+    ctaButtonLabel: "Continuar",
+    options: [],
     correctAnswer: 0,
   },
   {
     id: 9,
-    question: "Pergunta 9 - Insira sua pergunta aqui",
+    question: "Completa la frase:",
+    subtitle: '"Cuando pienso en tener mucho dinero, yo..."',
+    subtitleIsPrimary: true,
+    layout: "list",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "Siento que no lo merezco o no soy capaz", imageSrc: "", emoji: "😟" },
+      { label: "Me pongo ansioso(a) por miedo a perderlo", imageSrc: "", emoji: "😐" },
+      { label: "Me siento culpable por desearlo", imageSrc: "", emoji: "😔" },
+      { label: "Sé que es mío por derecho", imageSrc: "", emoji: "😌" },
     ],
     correctAnswer: 0,
   },
   {
     id: 10,
-    question: "Pergunta 10 - Insira sua pergunta aqui",
-    options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
-    ],
+    question: "",
+    redBanner: "¡Tu respuesta revela tu bloqueo principal!",
+    layout: "image-cta",
+    stepImage: "/images/step10-woman-problems.jpg",
+    ctaText: "La culpa corta tu conexión com la prosperidad. El dinero es solo energia - no es bueno ni malo. Libérate: puedes desear y seguir siendo luz.",
+    ctaButtonLabel: "Continuar",
+    options: [],
     correctAnswer: 0,
   },
   {
     id: 11,
-    question: "Pergunta 11 - Insira sua pergunta aqui",
+    question: "¿Sabías que ",
+    questionHighlight: "8 de las 10 familias más ricas",
+    questionAfterHighlight: " de la historia son judías?",
+    layout: "list",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "No me había dado cuenta de eso", imageSrc: "", emoji: "📱" },
+      { label: "Ya noté ese patrón", imageSrc: "", emoji: "🕯️" },
+      { label: "Siempre me he preguntado por qué", imageSrc: "", emoji: "🙏" },
+      { label: "Eso es una coincidencia", imageSrc: "", emoji: "👐" },
     ],
     correctAnswer: 0,
   },
   {
     id: 12,
-    question: "Pergunta 12 - Insira sua pergunta aqui",
-    options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
-    ],
+    question: "",
+    layout: "image-cta",
+    stepImage: "/images/step12-powerful-men.jpg",
+    ctaText: "Rothschild, Warburg, Goldman, Sachs, Lehman, Schiff, Oppenheimer, Rockefeller...",
+    ctaButtonLabel: "Continuar",
+    options: [],
     correctAnswer: 0,
   },
   {
     id: 13,
-    question: "Pergunta 13 - Insira sua pergunta aqui",
+    question: "¿Y si te dijera que una ",
+    questionHighlight: "oración de 12 palabras",
+    questionAfterHighlight: " en hebreo puede cambiar tu realidad financiera en 40 días, tú...?",
+    layout: "list",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "La intentaría de inmediato", imageSrc: "", emoji: "😄" },
+      { label: "Me daría mucha curiosidad saber más", imageSrc: "", emoji: "🤩" },
+      { label: "Necesitaría entender cómo funciona primero", imageSrc: "", emoji: "✨" },
     ],
     correctAnswer: 0,
   },
   {
     id: 14,
-    question: "Pergunta 14 - Insira sua pergunta aqui",
+    question: "¿Cuál es tu mayor deseo en este momento?",
+    subtitle: "Elige lo que más deseas",
+    layout: "list",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "Pagar todas las deudas", imageSrc: "" },
+      { label: "Tener un fondo de emergencia", imageSrc: "" },
+      { label: "Alcanzar la libertad financiera", imageSrc: "" },
+      { label: "Ayudar a mi familia", imageSrc: "" },
     ],
     correctAnswer: 0,
   },
   {
     id: 15,
-    question: "Pergunta 15 - Insira sua pergunta aqui",
-    options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
-    ],
+    question: "",
+    layout: "image-cta",
+    stepImage: "/images/step15-mystic-woman.jpg",
+    ctaText: "Las palabras se ajustan a tu deseo especifico...",
+    ctaButtonLabel: "Continuar",
+    options: [],
     correctAnswer: 0,
   },
   {
     id: 16,
-    question: "Pergunta 16 - Insira sua pergunta aqui",
+    question: "Marca lo que más deseas manifestar en los próximos 30 días:",
+    subtitle: "(Elección múltiple)",
+    layout: "multi-select",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "Abundancia financiera", imageSrc: "" },
+      { label: "Paz interior", imageSrc: "" },
+      { label: "Alegría", imageSrc: "" },
+      { label: "Motivación", imageSrc: "" },
+      { label: "Confianza", imageSrc: "" },
+      { label: "Relaciones saludables", imageSrc: "" },
+      { label: "Propósito", imageSrc: "" },
+      { label: "Gratitud", imageSrc: "" },
+      { label: "Claridad mental", imageSrc: "" },
+      { label: "Pensamientos positivos", imageSrc: "" },
+      { label: "Salud física", imageSrc: "" },
+      { label: "Enfoque", imageSrc: "" },
+      { label: "Evolución personal", imageSrc: "" },
+      { label: "Productividad", imageSrc: "" },
+      { label: "Manifestar deseos", imageSrc: "" },
+      { label: "Paciencia", imageSrc: "" },
     ],
     correctAnswer: 0,
   },
   {
     id: 17,
-    question: "Pergunta 17 - Insira sua pergunta aqui",
+    question: "¿Te comprometes a usar este poder solo para propósitos nobles?",
+    warningBanner: "Las palabras tienen conciencia propia, y se vuelven contra quien las usa con malas intenciones.",
+    stepImage: "/images/step17-hebrew-scroll.jpg",
+    layout: "list",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "Sí, me comprometo completamente", imageSrc: "", emoji: "🙏" },
+      { label: "No puedo garantizarlo", imageSrc: "", emoji: "✋" },
     ],
     correctAnswer: 0,
   },
   {
     id: 18,
-    question: "Pergunta 18 - Insira sua pergunta aqui",
-    options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
-    ],
+    question: "",
+    redBanner: "MIRA EL VIDEO DE ABAJO PARA RECIBIR LAS 12 PALABRAS SAGRADAS DE LA PROSPERIDAD JUDÍA...",
+    subtitle: "Advertencia: Si sales de esta página, pierdes el acesso para siempre.",
+    layout: "image-cta",
+    videoSrc: "/images/step18-video.mp4",
+    options: [],
     correctAnswer: 0,
   },
   {
     id: 19,
-    question: "Pergunta 19 - Insira sua pergunta aqui",
+    question: "¿Crees tener un corazón puro — libre de la avaricia y con el deseo genuino de transformar tu vida?",
+    subtitle: "Responde para seguir",
+    subtitleIsPrimary: true,
+    layout: "2-col",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "No", imageSrc: "", emoji: "🚫" },
+      { label: "Si", imageSrc: "", emoji: "✅" },
     ],
     correctAnswer: 0,
   },
   {
     id: 20,
-    question: "Pergunta 20 - Insira sua pergunta aqui",
+    question: "Sientes que fuiste elegido por algo más grande para finalmente recibir el conocimiento que estuvo guardado por siglos?",
+    subtitle: "Responde para seguir",
+    subtitleIsPrimary: true,
+    layout: "2-col",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "No", imageSrc: "", emoji: "🚫" },
+      { label: "Si", imageSrc: "", emoji: "✅" },
     ],
     correctAnswer: 0,
   },
   {
     id: 21,
-    question: "Pergunta 21 - Insira sua pergunta aqui",
+    question: "Si estas palabras realmente funcionan para quienes tienen pureza y fe...¿estás listo para demonstrarlo y comenzar hoy?",
+    subtitle: "Responde para seguir",
+    subtitleIsPrimary: true,
+    layout: "2-col",
     options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
+      { label: "No", imageSrc: "", emoji: "🚫" },
+      { label: "Si", imageSrc: "", emoji: "✅" },
     ],
     correctAnswer: 0,
   },
   {
     id: 22,
-    question: "Pergunta 22 - Insira sua pergunta aqui",
-    options: [
-      { label: "Opcao A", imageSrc: "" },
-      { label: "Opcao B", imageSrc: "" },
-    ],
+    question: "",
+    redBanner: "¡TEST COMPLETADO CON ÉXITO!",
+    headline: {
+      before: "EL MOMENTO DE TU",
+      highlight: "ACTIVACIÓN",
+      after: "HA LLEGADO.",
+    },
+    layout: "image-cta",
+    stepImage: "/images/step22-mystic-boy.png",
+    ctaText: "Las 12 palabras sagradas te están esperando. El conocimiento que cambió la historia del pueblo judío está a un paso de ser tuyo.",
+    ctaButtonLabel: "QUIERO MI ACTIVACIÓN AHORA",
+    options: [],
     correctAnswer: 0,
-  }
+  },
 ]
