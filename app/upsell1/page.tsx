@@ -7,11 +7,20 @@ export default function Upsell1Page() {
     const videoRef = useRef<HTMLVideoElement>(null)
     const [showWidget, setShowWidget] = useState(false)
 
+    const lastTimeRef = useRef(0)
+
     useEffect(() => {
         const video = videoRef.current
         if (!video) return
 
         const handleTimeUpdate = () => {
+            // Prevent seeking forward
+            if (video.currentTime > lastTimeRef.current + 1.5) {
+                video.currentTime = lastTimeRef.current
+            } else {
+                lastTimeRef.current = video.currentTime
+            }
+
             if (!showWidget && video.duration > 0) {
                 const progress = video.currentTime / video.duration
                 if (progress >= 0.8) {
@@ -20,8 +29,18 @@ export default function Upsell1Page() {
             }
         }
 
+        const handleSeeking = () => {
+            if (video.currentTime > lastTimeRef.current) {
+                video.currentTime = lastTimeRef.current
+            }
+        }
+
         video.addEventListener("timeupdate", handleTimeUpdate)
-        return () => video.removeEventListener("timeupdate", handleTimeUpdate)
+        video.addEventListener("seeking", handleSeeking)
+        return () => {
+            video.removeEventListener("timeupdate", handleTimeUpdate)
+            video.removeEventListener("seeking", handleSeeking)
+        }
     }, [showWidget])
 
     return (
