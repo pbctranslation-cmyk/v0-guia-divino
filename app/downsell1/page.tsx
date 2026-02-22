@@ -20,11 +20,11 @@ export default function Downsell1Page() {
 
                     {/* Message Section */}
                     <div className="flex flex-col gap-4">
-                        <p className="text-lg md:text-xl font-medium leading-relaxed">
+                        <p className="text-base md:text-xl font-medium leading-relaxed">
                             Si llegaste hasta aquí, es porque algo dentro de ti ya reconoció que este paso es importante.
                         </p>
                         <div className="h-px w-20 bg-primary/30 mx-auto" />
-                        <p className="text-base md:text-lg text-gray-600 leading-relaxed font-light">
+                        <p className="text-sm md:text-lg text-gray-600 leading-relaxed font-light">
                             Considerando la situación, he preparado una <span className="font-bold text-black italic">oferta que te resultará muy interesante</span>. Así, no obstaculizará tu progreso ni tu aprendizaje, y podrás alcanzar la prosperidad que necesitas por completo.
                         </p>
                     </div>

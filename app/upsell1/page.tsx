@@ -61,7 +61,7 @@ export default function Upsell1Page() {
 
                 {/* Header Banner */}
                 <div className="w-full bg-[#ff3b3b] py-4 px-4 text-center">
-                    <h1 className="text-white font-bold text-xl md:text-2xl lg:text-3xl max-w-4xl mx-auto leading-tight uppercase tracking-tight">
+                    <h1 className="text-white font-bold text-lg md:text-2xl lg:text-3xl max-w-4xl mx-auto leading-tight uppercase tracking-tight">
                         ¡ESPERA, TU COMPRA AÚN NO HA SIDO<br />FINALIZADA! TODAVÍA FALTA 1 PASO...
                     </h1>
                 </div>
@@ -79,10 +79,18 @@ export default function Upsell1Page() {
                     <div className="w-full rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.1)] border border-gray-100 bg-black">
                         <video
                             ref={videoRef}
-                            className="w-full aspect-[9/16] object-cover"
+                            className="w-full aspect-[9/16] object-cover vsl-video cursor-pointer"
                             controls
+                            controlsList="nodownload noplaybackrate"
                             autoPlay
+                            muted
                             playsInline
+                            onContextMenu={(e) => e.preventDefault()}
+                            onClick={(e) => {
+                                const v = e.currentTarget
+                                if (v.paused) v.play().catch(console.error)
+                                else v.pause()
+                            }}
                         >
                             <source src="/images/step-upsell1-video.mp4" type="video/mp4" />
                             Tu navegador no soporta el video.

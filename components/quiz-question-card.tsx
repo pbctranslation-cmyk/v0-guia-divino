@@ -140,7 +140,7 @@ export function QuizQuestionCard({
     return (
       <div className="flex flex-col gap-5 items-center w-full max-w-md mx-auto">
         {question.redBanner && (
-          <div className="w-full bg-[#cc0000] text-white py-2 px-4 rounded-xl text-center font-bold text-sm md:text-base mb-2">
+          <div className="w-full bg-[#cc0000] text-white py-2 px-3 rounded-xl text-center font-bold text-xs md:text-base mb-1">
             {question.redBanner}
           </div>
         )}
@@ -155,7 +155,7 @@ export function QuizQuestionCard({
         )}
 
         {question.headline && (
-          <h2 className="font-serif text-xl md:text-2xl font-bold uppercase leading-snug tracking-wide text-foreground text-center">
+          <h2 className="font-serif text-lg md:text-2xl font-bold uppercase leading-snug tracking-wide text-foreground text-center px-1">
             {question.headline.before}{" "}
             <span className="text-primary">{question.headline.highlight}</span>
             {question.headline.after ? ` ${question.headline.after}` : ""}
@@ -176,10 +176,17 @@ export function QuizQuestionCard({
               ref={videoRef}
               src={question.videoSrc}
               controls
+              controlsList="nodownload noplaybackrate"
               autoPlay
               muted
               playsInline
-              className="w-full h-auto aspect-video object-cover"
+              onContextMenu={(e) => e.preventDefault()}
+              onClick={(e) => {
+                const v = e.currentTarget
+                if (v.paused) v.play().catch(console.error)
+                else v.pause()
+              }}
+              className="w-full h-auto aspect-video object-cover vsl-video cursor-pointer"
             />
           ) : (
             <img
@@ -213,7 +220,7 @@ export function QuizQuestionCard({
     <div className="flex flex-col gap-6">
       {/* Red Banner at top */}
       {question.redBanner && (
-        <div className="w-full bg-[#cc0000] text-white py-2 px-4 rounded-xl text-center font-bold text-sm md:text-base">
+        <div className="w-full bg-[#cc0000] text-white py-2 px-3 rounded-xl text-center font-bold text-xs md:text-base">
           {question.redBanner}
         </div>
       )}
@@ -229,7 +236,7 @@ export function QuizQuestionCard({
       {/* Headline / Question Header */}
       {isSpecialStep && question.headline ? (
         <div className="flex flex-col gap-4 text-center">
-          <h2 className="font-serif text-xl md:text-2xl font-bold uppercase leading-snug tracking-wide text-foreground">
+          <h2 className="font-serif text-lg md:text-2xl font-bold uppercase leading-tight md:leading-snug tracking-wide text-foreground px-1">
             {question.headline.before}{" "}
             <span className="text-primary">{question.headline.highlight}</span>
             {question.headline.after ? ` ${question.headline.after}` : ""}
@@ -280,10 +287,31 @@ export function QuizQuestionCard({
         </div>
       )}
 
-      {/* Inline step image (between header and options) */}
-      {question.stepImage && (
+      {/* Inline step media (image or video between header and options) */}
+      {question.stepImage && !question.videoSrc && (
         <div className="w-full rounded-2xl overflow-hidden">
           <img src={question.stepImage} alt="" className="w-full h-auto object-cover" />
+        </div>
+      )}
+
+      {question.videoSrc && (
+        <div className="w-full rounded-2xl overflow-hidden shadow-2xl">
+          <video
+            ref={videoRef}
+            src={question.videoSrc}
+            controls
+            controlsList="nodownload noplaybackrate"
+            autoPlay
+            muted
+            playsInline
+            onContextMenu={(e) => e.preventDefault()}
+            onClick={(e) => {
+              const v = e.currentTarget
+              if (v.paused) v.play().catch(console.error)
+              else v.pause()
+            }}
+            className="w-full h-auto aspect-video object-cover vsl-video cursor-pointer"
+          />
         </div>
       )}
 

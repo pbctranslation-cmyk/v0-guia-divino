@@ -89,7 +89,33 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* VSL Video Player Overrides */
+.vsl-video::-webkit-media-controls-timeline,
+.vsl-video::-webkit-media-controls-current-time-display,
+.vsl-video::-webkit-media-controls-time-remaining-display,
+.vsl-video::-webkit-media-controls-play-button,
+.vsl-video::-webkit-media-controls-seek-back-button,
+.vsl-video::-webkit-media-controls-seek-forward-button,
+.vsl-video::-webkit-media-controls-fullscreen-button,
+.vsl-video::-internal-media-controls-download-button,
+.vsl-video::-webkit-media-controls-overflow-button {
+  display: none !important;
+}
+
+.vsl-video::-webkit-media-controls-panel {
+  background: transparent !important;
+}
+
+.vsl-video::-webkit-media-controls-enclosure {
+  background: transparent !important;
+}
+
+.vsl-video::-webkit-media-controls-volume-control-container {
+  display: flex !important;
 }
