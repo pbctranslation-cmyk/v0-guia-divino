@@ -186,7 +186,7 @@ export function QuizQuestionCard({
                 if (v.paused) v.play().catch(console.error)
                 else v.pause()
               }}
-              className="w-full h-auto aspect-video object-cover vsl-video cursor-pointer"
+              className="w-full h-auto aspect-[9/16] vsl-video cursor-pointer bg-black"
             />
           ) : (
             <img
@@ -310,7 +310,7 @@ export function QuizQuestionCard({
               if (v.paused) v.play().catch(console.error)
               else v.pause()
             }}
-            className="w-full h-auto aspect-video object-cover vsl-video cursor-pointer"
+            className="w-full h-auto aspect-[9/16] vsl-video cursor-pointer bg-black"
           />
         </div>
       )}
