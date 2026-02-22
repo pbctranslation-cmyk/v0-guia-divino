@@ -87,7 +87,7 @@ export function Quiz() {
   if (!isClient) return null // Evita piscar o primeiro passo no carregamento se houver redirecionamento
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-6 md:py-10">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-4 md:py-10">
       <QuizProgress currentStep={currentStep} totalSteps={effectiveQuestions.length} />
       <QuizQuestionCard
         key={`${currentStep}-${genderChoice}`}

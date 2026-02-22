@@ -61,10 +61,10 @@ export default function Upsell2Page() {
 
                 {/* Header Text */}
                 <div className="pt-10 pb-4 px-4 text-center flex flex-col gap-1">
-                    <p className="text-xl md:text-2xl font-bold text-black tracking-tight leading-tight max-w-2xl mx-auto">
+                    <p className="text-lg md:text-2xl font-bold text-black tracking-tight leading-tight max-w-2xl mx-auto">
                         Espera... necesito decirte esto antes de que sea demasiado tarde.
                     </p>
-                    <p className="text-2xl md:text-3xl font-extrabold text-[#ff3a3a] tracking-tight">
+                    <p className="text-xl md:text-3xl font-extrabold text-[#ff3a3a] tracking-tight">
                         ¡Mira este video con atención!
                     </p>
                 </div>
@@ -75,10 +75,18 @@ export default function Upsell2Page() {
                     <div className="w-full rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.1)] border border-gray-100 bg-black">
                         <video
                             ref={videoRef}
-                            className="w-full aspect-[9/16] object-cover"
+                            className="w-full aspect-[9/16] object-cover vsl-video cursor-pointer"
                             controls
+                            controlsList="nodownload noplaybackrate"
                             autoPlay
+                            muted
                             playsInline
+                            onContextMenu={(e) => e.preventDefault()}
+                            onClick={(e) => {
+                                const v = e.currentTarget
+                                if (v.paused) v.play().catch(console.error)
+                                else v.pause()
+                            }}
                         >
                             <source src="/images/step-upsell2-video.mp4" type="video/mp4" />
                             Tu navegador no soporta el video.
