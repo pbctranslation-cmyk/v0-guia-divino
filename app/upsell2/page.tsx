@@ -75,7 +75,7 @@ export default function Upsell2Page() {
                     <div className="w-full rounded-lg overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.1)] border border-gray-100 bg-black">
                         <video
                             ref={videoRef}
-                            className="w-full aspect-[9/16] object-cover vsl-video cursor-pointer"
+                            className="w-full aspect-[9/16] vsl-video cursor-pointer bg-black"
                             controls
                             controlsList="nodownload noplaybackrate"
                             autoPlay
