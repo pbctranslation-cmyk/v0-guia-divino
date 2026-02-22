@@ -25,10 +25,13 @@ export function QuizQuestionCard({
   const [showVideoBtn, setShowVideoBtn] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
+  const lastTimeRef = useRef(0)
+
   useEffect(() => {
     // Reset state when question changes
     setShowVideoBtn(false)
     setSelected(new Set())
+    lastTimeRef.current = 0
   }, [question.id])
 
   useEffect(() => {
@@ -36,6 +39,13 @@ export function QuizQuestionCard({
     if (!video || !question.videoSrc) return
 
     const handleTimeUpdate = () => {
+      // Prevent seeking forward
+      if (video.currentTime > lastTimeRef.current + 1.5) {
+        video.currentTime = lastTimeRef.current
+      } else {
+        lastTimeRef.current = video.currentTime
+      }
+
       if (video.duration) {
         const progress = video.currentTime / video.duration
         if (progress >= 0.8) {
@@ -44,8 +54,18 @@ export function QuizQuestionCard({
       }
     }
 
+    const handleSeeking = () => {
+      if (video.currentTime > lastTimeRef.current) {
+        video.currentTime = lastTimeRef.current
+      }
+    }
+
     video.addEventListener("timeupdate", handleTimeUpdate)
-    return () => video.removeEventListener("timeupdate", handleTimeUpdate)
+    video.addEventListener("seeking", handleSeeking)
+    return () => {
+      video.removeEventListener("timeupdate", handleTimeUpdate)
+      video.removeEventListener("seeking", handleSeeking)
+    }
   }, [question.videoSrc])
 
   const toggleSelect = (index: number) => {
