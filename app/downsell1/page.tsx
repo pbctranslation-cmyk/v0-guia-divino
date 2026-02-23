@@ -9,9 +9,26 @@ export default function Downsell1Page() {
             <Script
                 src="https://checkout.hotmart.com/lib/hotmart-checkout-elements.js"
                 strategy="afterInteractive"
+                onLoad={() => {
+                    // @ts-ignore
+                    if (window.checkoutElements) {
+                        // @ts-ignore
+                        window.checkoutElements.init('salesFunnel').mount('#hotmart-sales-funnel-ds1')
+                    }
+                }}
             />
-            <Script id="hotmart-sales-funnel-init-ds1" strategy="afterInteractive">
-                {`checkoutElements.init('salesFunnel').mount('#hotmart-sales-funnel-ds1')`}
+            {/* Fallback initialization in case script loads before component mounts or via navigation */}
+            <Script id="hotmart-sales-funnel-init-ds1" strategy="lazyOnload">
+                {`
+                    function mountHotmart() {
+                        if (typeof checkoutElements !== 'undefined') {
+                            checkoutElements.init('salesFunnel').mount('#hotmart-sales-funnel-ds1');
+                        } else {
+                            setTimeout(mountHotmart, 500);
+                        }
+                    }
+                    mountHotmart();
+                `}
             </Script>
 
             {/* --- Page Layout --- */}
