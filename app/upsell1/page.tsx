@@ -49,10 +49,26 @@ export default function Upsell1Page() {
             <Script
                 src="https://checkout.hotmart.com/lib/hotmart-checkout-elements.js"
                 strategy="afterInteractive"
+                onLoad={() => {
+                    // @ts-ignore
+                    if (window.checkoutElements && showWidget) {
+                        // @ts-ignore
+                        window.checkoutElements.init('salesFunnel').mount('#hotmart-sales-funnel-upsell1')
+                    }
+                }}
             />
             {showWidget && (
-                <Script id="hotmart-sales-funnel-init-upsell1" strategy="afterInteractive">
-                    {`checkoutElements.init('salesFunnel').mount('#hotmart-sales-funnel-upsell1')`}
+                <Script id="hotmart-sales-funnel-init-upsell1" strategy="lazyOnload">
+                    {`
+                        function mountUpsell1() {
+                            if (typeof checkoutElements !== 'undefined') {
+                                checkoutElements.init('salesFunnel').mount('#hotmart-sales-funnel-upsell1');
+                            } else {
+                                setTimeout(mountUpsell1, 500);
+                            }
+                        }
+                        mountUpsell1();
+                    `}
                 </Script>
             )}
 
