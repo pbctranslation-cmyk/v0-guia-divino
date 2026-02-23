@@ -56,6 +56,11 @@ export function Quiz() {
       if (currentStep < effectiveQuestions.length - 1) {
         setCurrentStep((prev) => prev + 1)
       } else {
+        // Dispara evento de InitiateCheckout do Facebook
+        if (typeof window !== 'undefined' && (window as any).fbq) {
+          (window as any).fbq('track', 'InitiateCheckout');
+        }
+
         // Exibe o spinner de carregamento e redireciona direto para o checkout
         setFinished(true)
         window.location.href = "https://pay.hotmart.com/I104537340A?off=5v6zt5x8"
