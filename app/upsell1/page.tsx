@@ -25,6 +25,10 @@ export default function Upsell1Page() {
                 const progress = video.currentTime / video.duration
                 if (progress >= 0.8) {
                     setShowWidget(true)
+                    // Trigger mount after state update
+                    setTimeout(() => {
+                        window.dispatchEvent(new CustomEvent('mount-hotmart-upsell1'))
+                    }, 100)
                 }
             }
         }
@@ -49,28 +53,17 @@ export default function Upsell1Page() {
             <Script
                 src="https://checkout.hotmart.com/lib/hotmart-checkout-elements.js"
                 strategy="afterInteractive"
-                onLoad={() => {
-                    // @ts-ignore
-                    if (window.checkoutElements && showWidget) {
-                        // @ts-ignore
-                        window.checkoutElements.init('salesFunnel').mount('#hotmart-sales-funnel-upsell1')
-                    }
-                }}
             />
-            {showWidget && (
-                <Script id="hotmart-sales-funnel-init-upsell1" strategy="lazyOnload">
-                    {`
-                        function mountUpsell1() {
-                            if (typeof checkoutElements !== 'undefined') {
-                                checkoutElements.init('salesFunnel').mount('#hotmart-sales-funnel-upsell1');
-                            } else {
-                                setTimeout(mountUpsell1, 500);
-                            }
+
+            <Script id="hotmart-mount-logic-upsell1" strategy="afterInteractive">
+                {`
+                    window.addEventListener('mount-hotmart-upsell1', function() {
+                        if (typeof checkoutElements !== 'undefined') {
+                            checkoutElements.init('salesFunnel').mount('#hotmart-sales-funnel-upsell1');
                         }
-                        mountUpsell1();
-                    `}
-                </Script>
-            )}
+                    });
+                `}
+            </Script>
 
             {/* --- Page Layout --- */}
             <div className="flex flex-col items-center min-h-screen bg-white text-black animate-in fade-in duration-700">
