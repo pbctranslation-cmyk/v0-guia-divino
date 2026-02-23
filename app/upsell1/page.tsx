@@ -92,7 +92,7 @@ export default function Upsell1Page() {
                                 else v.pause()
                             }}
                         >
-                            <source src="/images/video-placeholder.mp4" type="video/mp4" />
+                            <source src="/images/video_placeholder.mp4" type="video/mp4" />
                             Tu navegador no soporta el video.
                         </video>
                     </div>
