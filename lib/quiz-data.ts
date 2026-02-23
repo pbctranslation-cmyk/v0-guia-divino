@@ -295,7 +295,7 @@ export const quizQuestions: QuizQuestion[] = [
     redBanner: "MIRA EL VIDEO DE ABAJO PARA RECIBIR LAS 12 PALABRAS SAGRADAS DE LA PROSPERIDAD JUDÍA...",
     subtitle: "Advertencia: Si sales de esta página, pierdes el acesso para siempre.",
     layout: "image-cta",
-    videoSrc: "/images/step19-video.mp4",
+    videoSrc: "/images/video-placeholder.mp4",
     options: [],
     correctAnswer: 0,
   },
