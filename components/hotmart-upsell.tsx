@@ -13,11 +13,11 @@ export function HotmartUpsell({ title, description, onComplete, customButton }: 
     const [showOffer, setShowOffer] = useState(false)
     const videoRef = useRef<HTMLVideoElement>(null)
 
-    // Essa função escuta o tempo do vídeo para tags <video> do HTML5 e exibe o botão em 80%
+    // Essa função escuta o tempo do vídeo para tags <video> do HTML5 e exibe o botão em 35%
     const handleTimeUpdate = () => {
         if (videoRef.current) {
             const { currentTime, duration } = videoRef.current
-            if (duration && (currentTime / duration) >= 0.8) {
+            if (duration && (currentTime / duration) >= 0.35) {
                 if (!showOffer) {
                     setShowOffer(true)
                 }
