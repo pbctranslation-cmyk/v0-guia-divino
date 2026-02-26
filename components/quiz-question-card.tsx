@@ -48,7 +48,7 @@ export function QuizQuestionCard({
 
       if (video.duration) {
         const progress = video.currentTime / video.duration
-        if (progress >= 0.8) {
+        if (progress >= 0.35) {
           setShowVideoBtn(true)
         }
       }

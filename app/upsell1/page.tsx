@@ -23,7 +23,7 @@ export default function Upsell1Page() {
 
             if (!showWidget && video.duration > 0) {
                 const progress = video.currentTime / video.duration
-                if (progress >= 0.8) {
+                if (progress >= 0.35) {
                     setShowWidget(true)
                     // Trigger mount after state update
                     setTimeout(() => {
