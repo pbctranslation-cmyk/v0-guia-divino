@@ -20,17 +20,6 @@ export default function Upsell1Page() {
             } else {
                 lastTimeRef.current = video.currentTime
             }
-
-            if (!showWidget && video.duration > 0) {
-                const progress = video.currentTime / video.duration
-                if (progress >= 0.35) {
-                    setShowWidget(true)
-                    // Trigger mount after state update
-                    setTimeout(() => {
-                        window.dispatchEvent(new CustomEvent('mount-hotmart-upsell1'))
-                    }, 100)
-                }
-            }
         }
 
         const handleSeeking = () => {
@@ -45,7 +34,18 @@ export default function Upsell1Page() {
             video.removeEventListener("timeupdate", handleTimeUpdate)
             video.removeEventListener("seeking", handleSeeking)
         }
-    }, [showWidget])
+    }, [])
+
+    // Show widget after 3 seconds
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowWidget(true)
+            setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('mount-hotmart-upsell1'))
+            }, 100)
+        }, 3000)
+        return () => clearTimeout(timer)
+    }, [])
 
     return (
         <>
@@ -106,12 +106,25 @@ export default function Upsell1Page() {
                         </video>
                     </div>
 
-                    {/* Hotmart Upsell Widget */}
+                    {/* Motivational Text + Hotmart Upsell Widget */}
                     {showWidget && (
-                        <div
-                            id="hotmart-sales-funnel-upsell1"
-                            className="w-full animate-in fade-in slide-in-from-bottom-4 duration-700"
-                        />
+                        <>
+                            {/* Motivational Banner */}
+                            <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
+                                <div className="w-full rounded-xl px-5 py-4 text-center shadow-[0_10px_25px_rgba(0,0,0,0.1)]" style={{ backgroundColor: "#91712a" }}>
+                                    <p className="text-white font-bold text-sm md:text-base uppercase leading-snug tracking-tight">
+                                        No todos están preparados para dar el siguiente paso.<br />
+                                        La pregunta es… ¿tú lo estás?
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Hotmart Widget */}
+                            <div
+                                id="hotmart-sales-funnel-upsell1"
+                                className="w-full animate-in fade-in slide-in-from-bottom-4 duration-700"
+                            />
+                        </>
                     )}
                 </div>
             </div>
