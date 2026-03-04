@@ -63,7 +63,7 @@ export function Quiz() {
 
         // Exibe o spinner de carregamento e redireciona direto para o checkout
         setFinished(true)
-        window.location.href = "https://pay.hotmart.com/I104537340A?off=5v6zt5x8"
+        window.location.href = "https://pay.hotmart.com/I104537340A?off=5v6zt5x8&checkoutMode=10"
       }
     },
     [currentStep, currentQuestion, score, effectiveQuestions.length]
