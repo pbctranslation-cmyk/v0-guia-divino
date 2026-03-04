@@ -32,7 +32,15 @@ export function QuizQuestionCard({
     setShowVideoBtn(false)
     setSelected(new Set())
     lastTimeRef.current = 0
-  }, [question.id])
+
+    // Show button after 3s for any question with video
+    if (question.videoSrc) {
+      const timer = setTimeout(() => {
+        setShowVideoBtn(true)
+      }, 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [question.id, question.videoSrc])
 
   useEffect(() => {
     const video = videoRef.current
@@ -44,13 +52,6 @@ export function QuizQuestionCard({
         video.currentTime = lastTimeRef.current
       } else {
         lastTimeRef.current = video.currentTime
-      }
-
-      if (video.duration) {
-        const progress = video.currentTime / video.duration
-        if (progress >= 0.35) {
-          setShowVideoBtn(true)
-        }
       }
     }
 
