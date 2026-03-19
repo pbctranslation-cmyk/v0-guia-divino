@@ -33,8 +33,8 @@ export function QuizQuestionCard({
     setSelected(new Set())
     lastTimeRef.current = 0
 
-    // Show button after 3s for any question with video
-    if (question.videoSrc) {
+    // Show button after 3s for any question with video, except step 18
+    if (question.videoSrc && question.id !== 18) {
       const timer = setTimeout(() => {
         setShowVideoBtn(true)
       }, 3000)
@@ -53,6 +53,11 @@ export function QuizQuestionCard({
       } else {
         lastTimeRef.current = video.currentTime
       }
+
+      // Step 18 rule: show wait button after 16 min 10 sec (970s)
+      if (question.id === 18 && video.currentTime >= 970) {
+        setShowVideoBtn(true)
+      }
     }
 
     const handleSeeking = () => {
@@ -67,7 +72,7 @@ export function QuizQuestionCard({
       video.removeEventListener("timeupdate", handleTimeUpdate)
       video.removeEventListener("seeking", handleSeeking)
     }
-  }, [question.videoSrc])
+  }, [question.videoSrc, question.id])
 
   const toggleSelect = (index: number) => {
     setSelected(prev => {
