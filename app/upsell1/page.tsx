@@ -8,6 +8,7 @@ export default function Upsell1Page() {
     const [showWidget, setShowWidget] = useState(false)
 
     const lastTimeRef = useRef(0)
+    const widgetShownRef = useRef(false)
 
     useEffect(() => {
         const video = videoRef.current
@@ -19,6 +20,14 @@ export default function Upsell1Page() {
                 video.currentTime = lastTimeRef.current
             } else {
                 lastTimeRef.current = video.currentTime
+            }
+            
+            if (video.currentTime >= 595 && !widgetShownRef.current) {
+                widgetShownRef.current = true
+                setShowWidget(true)
+                setTimeout(() => {
+                    window.dispatchEvent(new CustomEvent('mount-hotmart-upsell1'))
+                }, 100)
             }
         }
 
@@ -36,16 +45,7 @@ export default function Upsell1Page() {
         }
     }, [])
 
-    // Show widget after 3 seconds
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setShowWidget(true)
-            setTimeout(() => {
-                window.dispatchEvent(new CustomEvent('mount-hotmart-upsell1'))
-            }, 100)
-        }, 3000)
-        return () => clearTimeout(timer)
-    }, [])
+
 
     return (
         <>
