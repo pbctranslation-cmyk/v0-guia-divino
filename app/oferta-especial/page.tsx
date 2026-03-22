@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { Lock, CheckCircle2, ShieldCheck, Zap, ChevronDown, MoveRight } from "lucide-react";
 import Image from "next/image";
+import { CheckoutLink } from "@/components/checkout-link";
 export default function OfertaEspecial() {
-    const checkoutUrl = "https://pay.hotmart.com/I104537340A?off=5v6zt5x8&checkoutMode=10";
 
     return (
         <main className="min-h-screen bg-[#0b0b0b] text-[#ffffff] font-sans selection:bg-[#c8a24a] selection:text-[#0b0b0b]">
@@ -47,13 +46,12 @@ export default function OfertaEspecial() {
                         <span className="text-white/80">Solo toma unos segundos comenzar.</span>
                     </p>
 
-                    <Link
-                        href={checkoutUrl}
+                    <CheckoutLink
                         className="group w-full bg-[#f8f8f8] hover:bg-white text-[#0b0b0b] font-bold text-lg md:text-xl py-5 px-8 rounded-lg shadow-[0_0_40px_rgba(200,162,74,0.4)] transition-all hover:scale-[1.02] active:scale-95 text-center flex items-center justify-center gap-3 ring-2 ring-[#c8a24a]/50"
                     >
                         Escuchar las 12 palabras ahora
                         <MoveRight className="w-5 h-5 text-[#c8a24a] group-hover:translate-x-1 transition-transform" />
-                    </Link>
+                    </CheckoutLink>
 
                     <div className="flex flex-col items-center mt-3 text-sm text-gray-400">
                         <div className="flex items-center gap-2 font-medium">
@@ -247,12 +245,11 @@ export default function OfertaEspecial() {
 
                 {/* CTA Seção 4 */}
                 <div className="w-full max-w-md mx-auto mt-20 flex flex-col items-center gap-4">
-                    <Link
-                        href={checkoutUrl}
+                    <CheckoutLink
                         className="w-full bg-[#c8a24a] hover:bg-[#b08d3e] text-[#0b0b0b] font-bold text-lg md:text-xl py-5 px-8 rounded-lg shadow-[0_0_50px_rgba(200,162,74,0.4)] transition-all hover:scale-[1.03] active:scale-95 text-center flex items-center justify-center font-sans tracking-wide"
                     >
                         Acceder a las 12 Palabras
-                    </Link>
+                    </CheckoutLink>
 
                     <div className="flex items-center gap-3 text-sm text-gray-400 mt-2">
                         <span>Acceso inmediato</span>
@@ -344,12 +341,11 @@ export default function OfertaEspecial() {
                             US$ 8
                         </p>
 
-                        <Link
-                            href={checkoutUrl}
+                        <CheckoutLink
                             className="w-full bg-[#c8a24a] hover:bg-[#b08d3e] text-[#0b0b0b] font-bold text-lg md:text-xl py-5 px-8 rounded-xl shadow-[0_0_40px_rgba(200,162,74,0.25)] transition-all hover:scale-[1.03] active:scale-95 text-center flex items-center justify-center font-sans tracking-wide mb-6"
                         >
                             Acceder ahora al Guía Divino
-                        </Link>
+                        </CheckoutLink>
 
                         <p className="text-sm text-gray-300 text-center font-medium">
                             Acceso inmediato después del pago.
@@ -464,12 +460,11 @@ export default function OfertaEspecial() {
                     </p>
 
                     <div className="w-full max-w-md mx-auto flex flex-col items-center gap-6">
-                        <Link
-                            href={checkoutUrl}
+                        <CheckoutLink
                             className="w-full bg-[#c8a24a] hover:bg-[#b08d3e] text-[#0b0b0b] font-bold text-lg md:text-xl py-5 px-8 rounded-lg shadow-[0_0_50px_rgba(255,245,200,0.55)] transition-all hover:scale-[1.03] hover:shadow-[0_0_70px_rgba(255,250,220,0.7)] active:scale-95 text-center flex items-center justify-center gap-2"
                         >
                             Acceder ahora
-                        </Link>
+                        </CheckoutLink>
 
                         <p className="text-center text-sm md:text-base text-gray-200 mt-2 font-medium">
                             Tu acceso comienza hoy. <br className="md:hidden" />
@@ -549,12 +544,11 @@ export default function OfertaEspecial() {
                 </div>
 
                 <div className="w-full max-w-md mx-auto flex flex-col items-center gap-4">
-                    <Link
-                        href={checkoutUrl}
+                    <CheckoutLink
                         className="w-full bg-[#c8a24a] hover:bg-[#b08d3e] text-[#0b0b0b] font-bold text-lg md:text-xl py-5 px-8 rounded-lg shadow-[0_0_50px_rgba(255,245,200,0.55)] transition-all hover:scale-[1.02] hover:shadow-[0_0_70px_rgba(255,250,220,0.7)] active:scale-95 text-center flex items-center justify-center font-sans tracking-wide"
                     >
                         Acceder ahora al Guía Divino
-                    </Link>
+                    </CheckoutLink>
 
                     <p className="text-[#c8a24a] font-medium mt-1 mb-2">
                         Escucha las 12 palabras hoy mismo.
