@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo, useEffect } from "react"
 import { quizQuestions, step2Man, step2Woman } from "@/lib/quiz-data"
 import { QuizProgress } from "@/components/quiz-progress"
 import { QuizQuestionCard } from "@/components/quiz-question-card"
+import { buildCheckoutUrl } from "@/lib/utm-utils"
 
 
 export function Quiz() {
@@ -63,7 +64,7 @@ export function Quiz() {
 
         // Exibe o spinner de carregamento e redireciona direto para o checkout
         setFinished(true)
-        window.location.href = "https://pay.hotmart.com/I104537340A?off=5v6zt5x8&checkoutMode=10"
+        window.location.href = buildCheckoutUrl("https://pay.hotmart.com/I104537340A?off=5v6zt5x8&checkoutMode=10")
       }
     },
     [currentStep, currentQuestion, score, effectiveQuestions.length]

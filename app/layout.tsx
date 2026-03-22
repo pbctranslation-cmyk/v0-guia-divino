@@ -3,6 +3,7 @@ import { Playfair_Display, Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import Script from 'next/script'
 import { FacebookPixelEvents } from '@/components/fb-pixel-events'
+import { UtmCapture } from '@/components/utm-capture'
 import { metadata as siteMetadata, viewport as siteViewport } from './metadata'
 import './globals.css'
 
@@ -30,7 +31,8 @@ export default function RootLayout({
         <Script
           src="https://cdn.utmify.com.br/scripts/utms/latest.js"
           data-utmify-prevent-subids
-          strategy="afterInteractive"
+          async
+          defer
         />
 
         {/* Facebook Pixel Base */}
@@ -58,6 +60,7 @@ export default function RootLayout({
         </noscript>
       </head>
       <body className={`${_playfair.variable} ${_inter.variable} font-sans antialiased`}>
+        <UtmCapture />
         <FacebookPixelEvents />
         {children}
         <Analytics />
