@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next'
 import Script from 'next/script'
 import { FacebookPixelEvents } from '@/components/fb-pixel-events'
 import { UtmCapture } from '@/components/utm-capture'
+import { SearchParamsForwarder } from '@/components/search-params-forwarder'
 import { metadata as siteMetadata, viewport as siteViewport } from './metadata'
 import './globals.css'
 
@@ -61,6 +62,7 @@ export default function RootLayout({
       </head>
       <body className={`${_playfair.variable} ${_inter.variable} font-sans antialiased`}>
         <UtmCapture />
+        <SearchParamsForwarder />
         <FacebookPixelEvents />
         {children}
         <Analytics />

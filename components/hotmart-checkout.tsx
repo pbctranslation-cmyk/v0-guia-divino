@@ -1,12 +1,12 @@
 "use client"
 
-import { buildCheckoutUrl } from "@/lib/utm-utils"
+import { buildCheckoutUrl, appendSearchParams } from "@/lib/utm-utils"
 
 export function HotmartCheckout() {
   const handleGoToCheckout = () => {
-    window.location.href = buildCheckoutUrl(
+    window.location.href = appendSearchParams(buildCheckoutUrl(
       "https://pay.hotmart.com/I104537340A?off=5v6zt5x8&checkoutMode=10"
-    )
+    ))
   }
 
   return (
