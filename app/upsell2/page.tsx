@@ -4,7 +4,7 @@ import Script from "next/script"
 import { useRef, useState, useEffect } from "react"
 
 // --- DELAY CONFIGURATION ---
-const DEBUG_ALWAYS_SHOW = true // Set to false to restore original delay
+const DEBUG_ALWAYS_SHOW = false // Set to false to restore original delay
 const UPSELL_2_DELAY_SECONDS = 790 // 13 minutes and 10 seconds
 
 
@@ -26,7 +26,7 @@ export default function Upsell2Page() {
             } else {
                 lastTimeRef.current = video.currentTime
             }
-            
+
             const effectiveDelay = DEBUG_ALWAYS_SHOW ? 0 : UPSELL_2_DELAY_SECONDS
             if (video.currentTime >= effectiveDelay && !widgetShownRef.current) {
                 widgetShownRef.current = true
