@@ -6,7 +6,7 @@ import type { QuizQuestion } from "@/lib/quiz-data"
 import { ChevronRight, ImageIcon, TriangleAlert } from "lucide-react"
 
 // --- DELAY CONFIGURATION ---
-const DEBUG_MODE = true // Set to false to restore original delays
+const DEBUG_MODE = false // Set to false to restore original delays
 const STEP_18_DELAY_SECONDS = 970 // 16 minutes and 10 seconds
 const DEFAULT_VIDEO_DELAY_MS = 3000 // 3 seconds for other questions
 
