@@ -134,3 +134,47 @@ export function buildCheckoutUrl(baseUrl: string): string {
 
   return url.toString()
 }
+
+/**
+ * Appends ALL current page URL search parameters (window.location.search)
+ * to a given URL string. This ensures UTMs, fbclid, gclid, and any other
+ * tracking parameters are forwarded through internal redirections.
+ *
+ * Parameters already present on the target URL are NOT overwritten.
+ *
+ * Works for both absolute URLs (https://...) and relative paths (/upsell1).
+ */
+export function appendSearchParams(targetUrl: string): string {
+  if (typeof window === "undefined") return targetUrl
+
+  const currentSearch = window.location.search
+  if (!currentSearch || currentSearch === "?") return targetUrl
+
+  const currentParams = new URLSearchParams(currentSearch)
+  if ([...currentParams].length === 0) return targetUrl
+
+  // Handle absolute URLs
+  if (targetUrl.startsWith("http://") || targetUrl.startsWith("https://")) {
+    const url = new URL(targetUrl)
+    currentParams.forEach((value, key) => {
+      // Don't overwrite params already in the target URL
+      if (!url.searchParams.has(key)) {
+        url.searchParams.set(key, value)
+      }
+    })
+    return url.toString()
+  }
+
+  // Handle relative URLs (e.g. /upsell1, /oferta-especial)
+  const [basePath, existingQuery] = targetUrl.split("?")
+  const targetParams = new URLSearchParams(existingQuery || "")
+
+  currentParams.forEach((value, key) => {
+    if (!targetParams.has(key)) {
+      targetParams.set(key, value)
+    }
+  })
+
+  const queryString = targetParams.toString()
+  return queryString ? `${basePath}?${queryString}` : basePath
+}

@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback } from "react"
-import { buildCheckoutUrl } from "@/lib/utm-utils"
+import { buildCheckoutUrl, appendSearchParams } from "@/lib/utm-utils"
 
 const BASE_CHECKOUT_URL =
   "https://pay.hotmart.com/I104537340A?off=5v6zt5x8&checkoutMode=10"
@@ -22,7 +22,7 @@ export function CheckoutLink({
 }) {
   const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
-    window.location.href = buildCheckoutUrl(BASE_CHECKOUT_URL)
+    window.location.href = appendSearchParams(buildCheckoutUrl(BASE_CHECKOUT_URL))
   }, [])
 
   return (

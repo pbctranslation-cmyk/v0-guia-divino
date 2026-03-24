@@ -5,6 +5,12 @@ import { cn } from "@/lib/utils"
 import type { QuizQuestion } from "@/lib/quiz-data"
 import { ChevronRight, ImageIcon, TriangleAlert } from "lucide-react"
 
+// --- DELAY CONFIGURATION ---
+const DEBUG_MODE = true // Set to false to restore original delays
+const STEP_18_DELAY_SECONDS = 970 // 16 minutes and 10 seconds
+const DEFAULT_VIDEO_DELAY_MS = 3000 // 3 seconds for other questions
+
+
 interface QuizQuestionCardProps {
   question: QuizQuestion
   onSelectOption: (index: number) => void
@@ -33,12 +39,16 @@ export function QuizQuestionCard({
     setSelected(new Set())
     lastTimeRef.current = 0
 
-    // Show button after 3s for any question with video, except step 18
-    if (question.videoSrc && question.id !== 18) {
-      const timer = setTimeout(() => {
+    // Show button after delay for any question with video
+    if (question.videoSrc) {
+      if (DEBUG_MODE) {
         setShowVideoBtn(true)
-      }, 3000)
-      return () => clearTimeout(timer)
+      } else if (question.id !== 18) {
+        const timer = setTimeout(() => {
+          setShowVideoBtn(true)
+        }, DEFAULT_VIDEO_DELAY_MS)
+        return () => clearTimeout(timer)
+      }
     }
   }, [question.id, question.videoSrc])
 
@@ -54,8 +64,9 @@ export function QuizQuestionCard({
         lastTimeRef.current = video.currentTime
       }
 
-      // Step 18 rule: show wait button after 16 min 10 sec (970s)
-      if (question.id === 18 && video.currentTime >= 970) {
+      // Step 18 rule: show wait button after delay
+      const effectiveDelay = DEBUG_MODE ? 0 : STEP_18_DELAY_SECONDS
+      if (question.id === 18 && video.currentTime >= effectiveDelay) {
         setShowVideoBtn(true)
       }
     }
