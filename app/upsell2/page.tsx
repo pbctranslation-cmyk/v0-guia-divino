@@ -3,6 +3,11 @@
 import Script from "next/script"
 import { useRef, useState, useEffect } from "react"
 
+// --- DELAY CONFIGURATION ---
+const DEBUG_ALWAYS_SHOW = true // Set to false to restore original delay
+const UPSELL_2_DELAY_SECONDS = 790 // 13 minutes and 10 seconds
+
+
 export default function Upsell2Page() {
     const videoRef = useRef<HTMLVideoElement>(null)
     const [showWidget, setShowWidget] = useState(false)
@@ -16,13 +21,14 @@ export default function Upsell2Page() {
 
         const handleTimeUpdate = () => {
             // Prevent seeking forward
-            if (video.currentTime > lastTimeRef.current + 1.5) {
+            if (video.currentTime > lastTimeRef.current + 1.5 && !DEBUG_ALWAYS_SHOW) {
                 video.currentTime = lastTimeRef.current
             } else {
                 lastTimeRef.current = video.currentTime
             }
-
-            if (video.currentTime >= 790 && !widgetShownRef.current) {
+            
+            const effectiveDelay = DEBUG_ALWAYS_SHOW ? 0 : UPSELL_2_DELAY_SECONDS
+            if (video.currentTime >= effectiveDelay && !widgetShownRef.current) {
                 widgetShownRef.current = true
                 setShowWidget(true)
                 setTimeout(() => {
@@ -32,7 +38,7 @@ export default function Upsell2Page() {
         }
 
         const handleSeeking = () => {
-            if (video.currentTime > lastTimeRef.current) {
+            if (video.currentTime > lastTimeRef.current && !DEBUG_ALWAYS_SHOW) {
                 video.currentTime = lastTimeRef.current
             }
         }
